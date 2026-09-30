@@ -1,0 +1,1199 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>IQC Creator</title>
+
+<style>
+*{box-sizing:border-box}
+
+body{
+    margin:0;
+    background:#111;
+    color:#fff;
+    font-family:Arial,sans-serif;
+}
+
+header{
+    height:60px;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    background:#171717;
+    border-bottom:1px solid #292929;
+    font-size:21px;
+    font-weight:bold;
+    position:sticky;
+    top:0;
+    z-index:10;
+}
+
+main{
+    width:100%;
+    max-width:900px;
+    margin:auto;
+    padding:12px;
+}
+
+.box{
+    background:#181818;
+    border:1px solid #292929;
+    border-radius:16px;
+    padding:14px;
+    margin-bottom:12px;
+}
+
+h2{
+    margin:0 0 12px;
+    font-size:17px;
+}
+
+canvas{
+    display:block;
+    width:100%;
+    height:auto;
+    background:#000;
+    border-radius:12px;
+}
+
+label{
+    display:flex;
+    justify-content:space-between;
+    margin:12px 0 5px;
+    color:#aaa;
+    font-size:13px;
+}
+
+.value{
+    color:#25dc91;
+}
+
+input,
+textarea{
+    width:100%;
+    padding:11px;
+    border-radius:10px;
+    border:1px solid #3a3a3a;
+    background:#090909;
+    color:#fff;
+    outline:none;
+    font-size:14px;
+}
+
+textarea{
+    min-height:90px;
+    resize:vertical;
+}
+
+input[type=range]{
+    padding:0;
+    accent-color:#20d48b;
+}
+
+.grid{
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:8px;
+}
+
+.reactions{
+    display:grid;
+    grid-template-columns:repeat(3,1fr);
+    gap:8px;
+}
+
+button{
+    width:100%;
+    border:0;
+    border-radius:11px;
+    padding:14px;
+    margin-top:8px;
+    background:#18ad73;
+    color:white;
+    font-size:16px;
+    font-weight:bold;
+}
+
+button.secondary{
+    background:#303030;
+}
+
+button.danger{
+    background:#9f2929;
+}
+
+.status{
+    margin-top:10px;
+    padding:10px;
+    border-radius:9px;
+    background:#0b0b0b;
+    font-size:12px;
+}
+
+.good{color:#25dc91}
+.bad{color:#ff5555}
+
+#resultBox{
+    display:none;
+}
+</style>
+</head>
+
+<body>
+
+<header>⚡ IQC CREATOR</header>
+
+<main>
+
+<!-- PREVIEW -->
+<div class="box">
+<h2>🖼️ Preview</h2>
+
+<canvas id="preview"
+        width="878"
+        height="1536"></canvas>
+
+<div id="status" class="status">
+Memuat template.png...
+</div>
+</div>
+
+
+<!-- TEMPLATE -->
+<div class="box">
+
+<h2>🖼️ Template IQC</h2>
+
+<label>
+Posisi X
+<span class="value" id="tplXText">0</span>
+</label>
+
+<input id="tplX"
+       type="range"
+       min="-500"
+       max="500"
+       value="0">
+
+<label>
+Posisi Y
+<span class="value" id="tplYText">0</span>
+</label>
+
+<input id="tplY"
+       type="range"
+       min="-700"
+       max="700"
+       value="0">
+
+<label>
+Ukuran
+<span class="value" id="tplScaleText">100%</span>
+</label>
+
+<input id="tplScale"
+       type="range"
+       min="30"
+       max="180"
+       value="100">
+
+</div>
+
+
+<!-- STATUS -->
+<div class="box">
+
+<h2>📱 Status Bar</h2>
+
+<div class="grid">
+
+<div>
+<label>Operator</label>
+<input id="operator" value="XL">
+</div>
+
+<div>
+<label>Jaringan</label>
+<input id="network" value="5G">
+</div>
+
+</div>
+
+<label>Jam</label>
+<input id="clock" value="00:16">
+
+<label>
+Baterai
+<span class="value" id="batteryText">17%</span>
+</label>
+
+<input id="battery"
+       type="range"
+       min="0"
+       max="100"
+       value="17">
+
+<label>
+Sinyal
+<span class="value" id="signalText">4</span>
+</label>
+
+<input id="signal"
+       type="range"
+       min="0"
+       max="4"
+       value="4">
+
+</div>
+
+
+<!-- REACTION -->
+<div class="box">
+
+<h2>❤️ Reaction</h2>
+
+<div class="reactions">
+<input id="r1" value="👍">
+<input id="r2" value="❤️">
+<input id="r3" value="😂">
+<input id="r4" value="😮">
+<input id="r5" value="😢">
+<input id="r6" value="🙏">
+</div>
+
+<label>
+Posisi Y
+<span class="value" id="reactionYText">600</span>
+</label>
+
+<input id="reactionY"
+       type="range"
+       min="100"
+       max="1100"
+       value="600">
+
+<label>
+Ukuran
+<span class="value" id="reactionSizeText">42</span>
+</label>
+
+<input id="reactionSize"
+       type="range"
+       min="20"
+       max="70"
+       value="42">
+
+</div>
+
+
+<!-- MESSAGE -->
+<div class="box">
+
+<h2>💬 Pesan</h2>
+
+<textarea id="message">Lagi Cari Add-on, Skin, Texture, Minecraft Keren?
+Sini Mampir!</textarea>
+
+<label>Waktu</label>
+<input id="messageTime" value="00:16">
+
+<label>
+Posisi Y
+<span class="value" id="messageYText">700</span>
+</label>
+
+<input id="messageY"
+       type="range"
+       min="250"
+       max="1200"
+       value="700">
+
+<label>
+Ukuran
+<span class="value" id="messageSizeText">25</span>
+</label>
+
+<input id="messageSize"
+       type="range"
+       min="14"
+       max="45"
+       value="25">
+
+</div>
+
+
+<!-- MENU -->
+<div class="box">
+
+<h2>📋 Menu</h2>
+
+<div class="grid">
+
+<input id="m0" value="Beri Bintang">
+<input id="i0" value="☆">
+
+<input id="m1" value="Balas">
+<input id="i1" value="↩">
+
+<input id="m2" value="Teruskan">
+<input id="i2" value="↗">
+
+<input id="m3" value="Salin">
+<input id="i3" value="▣">
+
+<input id="m4" value="Ucapkan">
+<input id="i4" value="▢">
+
+<input id="m5" value="Laporkan">
+<input id="i5" value="△">
+
+<input id="m6" value="Hapus">
+<input id="i6" value="⌫">
+
+</div>
+
+<label>
+Posisi Y
+<span class="value" id="menuYText">850</span>
+</label>
+
+<input id="menuY"
+       type="range"
+       min="450"
+       max="1250"
+       value="850">
+
+</div>
+
+
+<!-- BUTTON -->
+<div class="box">
+
+<button onclick="createImage()">
+✨ CREATE
+</button>
+
+<button class="secondary"
+        onclick="downloadImage()">
+📥 DOWNLOAD PNG
+</button>
+
+<button class="secondary"
+        onclick="saveData()">
+💾 SIMPAN SETTING
+</button>
+
+<button class="secondary"
+        onclick="loadData()">
+📂 LOAD SETTING
+</button>
+
+<button class="danger"
+        onclick="resetData()">
+♻️ RESET
+</button>
+
+</div>
+
+
+<!-- RESULT -->
+<div class="box" id="resultBox">
+
+<h2>🖼️ HASIL CREATE</h2>
+
+<canvas id="result"
+        width="878"
+        height="1536"></canvas>
+
+</div>
+
+</main>
+
+
+<script>
+
+/* =========================
+   CANVAS
+========================= */
+
+const WIDTH = 878;
+const HEIGHT = 1536;
+
+const preview =
+document.getElementById("preview");
+
+const result =
+document.getElementById("result");
+
+const pctx =
+preview.getContext("2d");
+
+const rctx =
+result.getContext("2d");
+
+
+/* =========================
+   TEMPLATE
+========================= */
+
+const templateImage =
+new Image();
+
+let templateLoaded = false;
+
+templateImage.onload = function(){
+
+    templateLoaded = true;
+
+    updateStatus();
+
+    renderPreview();
+
+};
+
+templateImage.onerror = function(){
+
+    templateLoaded = false;
+
+    updateStatus();
+
+    renderPreview();
+
+};
+
+templateImage.src = "template.png";
+
+
+/* =========================
+   VALUE
+========================= */
+
+function value(id){
+    return document.getElementById(id).value;
+}
+
+function num(id){
+    return Number(value(id));
+}
+
+
+/* =========================
+   STATUS
+========================= */
+
+function updateStatus(){
+
+    const status =
+    document.getElementById("status");
+
+    if(templateLoaded){
+
+        status.innerHTML =
+        '<span class="good">✓ template.png berhasil dimuat</span>';
+
+    }else{
+
+        status.innerHTML =
+        '<span class="bad">✕ template.png tidak ditemukan</span>';
+
+    }
+}
+
+
+/* =========================
+   TEMPLATE
+========================= */
+
+function drawTemplate(ctx){
+
+    if(!templateLoaded){
+
+        ctx.fillStyle="#111";
+
+        ctx.fillRect(
+            0,
+            0,
+            WIDTH,
+            HEIGHT
+        );
+
+        return;
+    }
+
+    const scale =
+    num("tplScale") / 100;
+
+    const w =
+    templateImage.naturalWidth * scale;
+
+    const h =
+    templateImage.naturalHeight * scale;
+
+    const x =
+    (WIDTH - w) / 2 +
+    num("tplX");
+
+    const y =
+    (HEIGHT - h) / 2 +
+    num("tplY");
+
+    ctx.drawImage(
+        templateImage,
+        x,
+        y,
+        w,
+        h
+    );
+}
+
+
+/* =========================
+   STATUS BAR
+========================= */
+
+function drawStatusBar(ctx){
+
+    ctx.save();
+
+    ctx.fillStyle="#fff";
+
+    ctx.textAlign="left";
+
+    ctx.font="17px Arial";
+
+    ctx.fillText(
+        value("operator"),
+        25,
+        55
+    );
+
+    ctx.fillText(
+        value("network"),
+        70,
+        55
+    );
+
+    ctx.textAlign="center";
+
+    ctx.font="21px Arial";
+
+    ctx.fillText(
+        value("clock"),
+        WIDTH / 2,
+        55
+    );
+
+
+    /* SIGNAL */
+
+    for(let i=0;i<4;i++){
+
+        const h=9+i*7;
+
+        ctx.fillStyle =
+        i < num("signal")
+        ? "#fff"
+        : "rgba(255,255,255,.25)";
+
+        ctx.fillRect(
+            WIDTH-145+i*9,
+            55-h,
+            6,
+            h
+        );
+    }
+
+
+    /* BATTERY */
+
+    const battery =
+    num("battery");
+
+    ctx.fillStyle="#fff";
+
+    ctx.textAlign="left";
+
+    ctx.font="16px Arial";
+
+    ctx.fillText(
+        battery+"%",
+        WIDTH-90,
+        42
+    );
+
+    const bx=WIDTH-45;
+    const by=27;
+
+    ctx.strokeStyle="#fff";
+    ctx.lineWidth=2;
+
+    ctx.strokeRect(
+        bx,
+        by,
+        28,
+        15
+    );
+
+    ctx.fillStyle =
+    battery <= 20
+    ? "#ffd000"
+    : "#fff";
+
+    ctx.fillRect(
+        bx+2,
+        by+2,
+        24* battery/100,
+        11
+    );
+
+    ctx.restore();
+}
+
+
+/* =========================
+   MESSAGE
+========================= */
+
+function drawMessage(ctx){
+
+    const x=30;
+    const y=num("messageY");
+    const width=700;
+    const size=num("messageSize");
+
+    ctx.font=size+"px Arial";
+
+    const words =
+    value("message").split(/\s+/);
+
+    const lines=[];
+    let line="";
+
+    words.forEach(word=>{
+
+        const test =
+        line
+        ? line+" "+word
+        : word;
+
+        if(
+            ctx.measureText(test).width >
+            width-50 &&
+            line
+        ){
+
+            lines.push(line);
+            line=word;
+
+        }else{
+
+            line=test;
+
+        }
+    });
+
+    if(line){
+        lines.push(line);
+    }
+
+    const lineHeight=size*1.4;
+
+    const height=Math.max(
+        105,
+        45+lines.length*lineHeight
+    );
+
+    ctx.fillStyle=
+    "rgba(65,65,67,.95)";
+
+    ctx.beginPath();
+
+    ctx.roundRect(
+        x,
+        y,
+        width,
+        height,
+        20
+    );
+
+    ctx.fill();
+
+    ctx.fillStyle="#fff";
+
+    ctx.textAlign="left";
+
+    ctx.font=size+"px Arial";
+
+    lines.forEach((text,index)=>{
+
+        ctx.fillText(
+            text,
+            x+25,
+            y+size+8+
+            index*lineHeight
+        );
+
+    });
+
+    ctx.fillStyle="#aaa";
+
+    ctx.textAlign="right";
+
+    ctx.font="16px Arial";
+
+    ctx.fillText(
+        value("messageTime"),
+        x+width-18,
+        y+height-12
+    );
+}
+
+
+/* =========================
+   MENU
+========================= */
+
+function drawMenu(ctx){
+
+    const x=30;
+    const y=num("menuY");
+    const width=545;
+    const row=68;
+
+    ctx.fillStyle=
+    "rgba(38,38,40,.97)";
+
+    ctx.beginPath();
+
+    ctx.roundRect(
+        x,
+        y,
+        width,
+        row*7,
+        20
+    );
+
+    ctx.fill();
+
+    for(let i=0;i<7;i++){
+
+        const yy=
+        y+i*row;
+
+        if(i>0){
+
+            ctx.strokeStyle="#444";
+
+            ctx.beginPath();
+
+            ctx.moveTo(
+                x+15,
+                yy
+            );
+
+            ctx.lineTo(
+                x+width-15,
+                yy
+            );
+
+            ctx.stroke();
+        }
+
+        ctx.fillStyle =
+        i===6
+        ? "#ff453a"
+        : "#fff";
+
+        ctx.textAlign="left";
+
+        ctx.font="19px Arial";
+
+        ctx.fillText(
+            value("m"+i),
+            x+25,
+            yy+43
+        );
+
+        ctx.textAlign="center";
+
+        ctx.font="25px Arial";
+
+        ctx.fillText(
+            value("i"+i),
+            x+width-35,
+            yy+43
+        );
+    }
+}
+
+
+/* =========================
+   REACTION
+   SELALU PALING DEPAN
+========================= */
+
+function drawReaction(ctx){
+
+    const x=40;
+    const y=num("reactionY");
+
+    const width=540;
+    const height=70;
+
+    /*
+       Shadow supaya reaction
+       tetap terlihat di atas elemen lain.
+    */
+
+    ctx.save();
+
+    ctx.shadowColor=
+    "rgba(0,0,0,.65)";
+
+    ctx.shadowBlur=8;
+
+    ctx.fillStyle=
+    "rgba(38,38,40,.98)";
+
+    ctx.beginPath();
+
+    ctx.roundRect(
+        x,
+        y,
+        width,
+        height,
+        35
+    );
+
+    ctx.fill();
+
+    ctx.shadowColor="transparent";
+
+
+    const emojis=[
+        value("r1"),
+        value("r2"),
+        value("r3"),
+        value("r4"),
+        value("r5"),
+        value("r6")
+    ];
+
+    ctx.textAlign="center";
+
+    ctx.textBaseline="middle";
+
+    ctx.font=
+    num("reactionSize")+
+    "px Arial";
+
+    emojis.forEach(
+    (emoji,index)=>{
+
+        ctx.fillStyle="#fff";
+
+        ctx.fillText(
+            emoji,
+            x+45+index*90,
+            y+height/2
+        );
+
+    });
+
+    ctx.restore();
+}
+
+
+/* =========================
+   RENDER
+========================= */
+
+function render(ctx){
+
+    /*
+       Bersihkan semuanya.
+    */
+
+    ctx.clearRect(
+        0,
+        0,
+        WIDTH,
+        HEIGHT
+    );
+
+
+    /*
+       Dasar hitam.
+    */
+
+    ctx.fillStyle="#000";
+
+    ctx.fillRect(
+        0,
+        0,
+        WIDTH,
+        HEIGHT
+    );
+
+
+    /*
+       URUTAN LAYER
+    */
+
+    // 1. Template
+    drawTemplate(ctx);
+
+    // 2. Status
+    drawStatusBar(ctx);
+
+    // 3. Pesan
+    drawMessage(ctx);
+
+    // 4. Menu
+    drawMenu(ctx);
+
+    // 5. REACTION PALING ATAS
+    drawReaction(ctx);
+}
+
+
+/* =========================
+   PREVIEW
+========================= */
+
+function renderPreview(){
+
+    render(pctx);
+}
+
+
+/* =========================
+   CREATE
+========================= */
+
+function createImage(){
+
+    /*
+       CREATE menggunakan render
+       yang sama dengan Preview.
+    */
+
+    render(rctx);
+
+    const box =
+    document.getElementById(
+        "resultBox"
+    );
+
+    box.style.display="block";
+
+    setTimeout(()=>{
+
+        box.scrollIntoView({
+            behavior:"smooth",
+            block:"start"
+        });
+
+    },50);
+}
+
+
+/* =========================
+   DOWNLOAD
+========================= */
+
+function downloadImage(){
+
+    render(rctx);
+
+    const link =
+    document.createElement("a");
+
+    link.download=
+    "IQC-Custom.png";
+
+    link.href=
+    result.toDataURL("image/png");
+
+    document.body.appendChild(link);
+
+    link.click();
+
+    link.remove();
+}
+
+
+/* =========================
+   LABEL UPDATE
+========================= */
+
+function updateLabels(){
+
+    document.getElementById(
+        "tplXText"
+    ).textContent=num("tplX");
+
+    document.getElementById(
+        "tplYText"
+    ).textContent=num("tplY");
+
+    document.getElementById(
+        "tplScaleText"
+    ).textContent=
+    num("tplScale")+"%";
+
+    document.getElementById(
+        "batteryText"
+    ).textContent=
+    num("battery")+"%";
+
+    document.getElementById(
+        "signalText"
+    ).textContent=
+    num("signal");
+
+    document.getElementById(
+        "reactionYText"
+    ).textContent=
+    num("reactionY");
+
+    document.getElementById(
+        "reactionSizeText"
+    ).textContent=
+    num("reactionSize");
+
+    document.getElementById(
+        "messageYText"
+    ).textContent=
+    num("messageY");
+
+    document.getElementById(
+        "messageSizeText"
+    ).textContent=
+    num("messageSize");
+
+    document.getElementById(
+        "menuYText"
+    ).textContent=
+    num("menuY");
+}
+
+
+/* =========================
+   LIVE UPDATE
+========================= */
+
+document
+.querySelectorAll("input,textarea")
+.forEach(element=>{
+
+    element.addEventListener(
+        "input",
+        ()=>{
+
+            updateLabels();
+
+            renderPreview();
+
+        }
+    );
+
+});
+
+
+/* =========================
+   SAVE
+========================= */
+
+function saveData(){
+
+    const data={};
+
+    document
+    .querySelectorAll("input,textarea")
+    .forEach(element=>{
+
+        data[element.id]=
+        element.value;
+
+    });
+
+    localStorage.setItem(
+        "IQC_SETTINGS",
+        JSON.stringify(data)
+    );
+
+    alert(
+        "Setting berhasil disimpan."
+    );
+}
+
+
+/* =========================
+   LOAD
+========================= */
+
+function loadData(){
+
+    const saved=
+    localStorage.getItem(
+        "IQC_SETTINGS"
+    );
+
+    if(!saved){
+
+        alert(
+            "Belum ada setting tersimpan."
+        );
+
+        return;
+    }
+
+    const data=
+    JSON.parse(saved);
+
+    Object.keys(data)
+    .forEach(id=>{
+
+        const element=
+        document.getElementById(id);
+
+        if(element){
+            element.value=data[id];
+        }
+
+    });
+
+    updateLabels();
+
+    renderPreview();
+}
+
+
+/* =========================
+   RESET
+========================= */
+
+function resetData(){
+
+    localStorage.removeItem(
+        "IQC_SETTINGS"
+    );
+
+    location.reload();
+}
+
+
+/* =========================
+   START
+========================= */
+
+updateLabels();
+
+renderPreview();
+
+</script>
+
+</body>
+</html>
